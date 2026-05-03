@@ -1,0 +1,1718 @@
+[
+  {
+    "name": "Acid Splash",
+    "level": 0,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Chill Touch",
+    "level": 0,
+    "school": "Necromancy",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Dancing Lights",
+    "level": 0,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Druidcraft",
+    "level": 0,
+    "school": "Transmutation",
+    "classes": "Druid"
+  },
+  {
+    "name": "Eldritch Blast",
+    "level": 0,
+    "school": "Evocation",
+    "classes": "Warlock"
+  },
+  {
+    "name": "Fire Bolt",
+    "level": 0,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Guidance",
+    "level": 0,
+    "school": "Divination",
+    "classes": "Cleric, Druid"
+  },
+  {
+    "name": "Mage Hand",
+    "level": 0,
+    "school": "Conjuration",
+    "classes": "Bard, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Minor Illusion",
+    "level": 0,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Produce Flame",
+    "level": 0,
+    "school": "Conjuration",
+    "classes": "Druid"
+  },
+  {
+    "name": "Ray of Frost",
+    "level": 0,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Resistance",
+    "level": 0,
+    "school": "Abjuration",
+    "classes": "Cleric, Druid"
+  },
+  {
+    "name": "Sacred Flame",
+    "level": 0,
+    "school": "Evocation",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Shillelagh",
+    "level": 0,
+    "school": "Transmutation",
+    "classes": "Druid"
+  },
+  {
+    "name": "Shocking Grasp",
+    "level": 0,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Sorcerous Burst",
+    "level": 0,
+    "school": "Evocation",
+    "classes": "Sorcerer"
+  },
+  {
+    "name": "Spare the Dying",
+    "level": 0,
+    "school": "Necromancy",
+    "classes": "Cleric, Druid"
+  },
+  {
+    "name": "Thaumaturgy",
+    "level": 0,
+    "school": "Transmutation",
+    "classes": "Cleric"
+  },
+  {
+    "name": "True Strike",
+    "level": 0,
+    "school": "Divination",
+    "classes": "Bard, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Vicious Mockery",
+    "level": 0,
+    "school": "Enchantment",
+    "classes": "Bard"
+  },
+  {
+    "name": "Alarm",
+    "level": 1,
+    "school": "Abjuration",
+    "classes": "Ranger, Wizard"
+  },
+  {
+    "name": "Animal Friendship",
+    "level": 1,
+    "school": "Enchantment",
+    "classes": "Bard, Druid, Ranger"
+  },
+  {
+    "name": "Bane",
+    "level": 1,
+    "school": "Enchantment",
+    "classes": "Bard, Cleric, Warlock"
+  },
+  {
+    "name": "Bless",
+    "level": 1,
+    "school": "Enchantment",
+    "classes": "Cleric, Paladin"
+  },
+  {
+    "name": "Burning Hands",
+    "level": 1,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Chromatic Orb",
+    "level": 1,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Color Spray",
+    "level": 1,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Command",
+    "level": 1,
+    "school": "Enchantment",
+    "classes": "Bard, Cleric, Paladin"
+  },
+  {
+    "name": "Comprehend Languages",
+    "level": 1,
+    "school": "Divination",
+    "classes": "Bard, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Create or Destroy Water",
+    "level": 1,
+    "school": "Transmutation",
+    "classes": "Cleric, Druid"
+  },
+  {
+    "name": "Detect Evil and Good",
+    "level": 1,
+    "school": "Divination",
+    "classes": "Cleric, Paladin"
+  },
+  {
+    "name": "Detect Poison and Disease",
+    "level": 1,
+    "school": "Divination",
+    "classes": "Cleric, Druid, Paladin, Ranger"
+  },
+  {
+    "name": "Disguise Self",
+    "level": 1,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Dissonant Whispers",
+    "level": 1,
+    "school": "Enchantment",
+    "classes": "Bard"
+  },
+  {
+    "name": "Divine Favor",
+    "level": 1,
+    "school": "Transmutation",
+    "classes": "Paladin"
+  },
+  {
+    "name": "Divine Smite",
+    "level": 1,
+    "school": "Evocation",
+    "classes": "Paladin"
+  },
+  {
+    "name": "Ensnaring Strike",
+    "level": 1,
+    "school": "Conjuration",
+    "classes": "Ranger"
+  },
+  {
+    "name": "Entangle",
+    "level": 1,
+    "school": "Conjuration",
+    "classes": "Druid, Ranger"
+  },
+  {
+    "name": "Expeditious Retreat",
+    "level": 1,
+    "school": "Transmutation",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Faerie Fire",
+    "level": 1,
+    "school": "Evocation",
+    "classes": "Bard, Druid"
+  },
+  {
+    "name": "False Life",
+    "level": 1,
+    "school": "Necromancy",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Feather Fall",
+    "level": 1,
+    "school": "Transmutation",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Find Familiar",
+    "level": 1,
+    "school": "Conjuration",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Floating Disk",
+    "level": 1,
+    "school": "Conjuration",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Fog Cloud",
+    "level": 1,
+    "school": "Conjuration",
+    "classes": "Druid, Ranger, Sorcerer, Wizard"
+  },
+  {
+    "name": "Grease",
+    "level": 1,
+    "school": "Conjuration",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Guiding Bolt",
+    "level": 1,
+    "school": "Evocation",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Healing Word",
+    "level": 1,
+    "school": "Abjuration",
+    "classes": "Bard, Cleric, Druid"
+  },
+  {
+    "name": "Hellish Rebuke",
+    "level": 1,
+    "school": "Evocation",
+    "classes": "Warlock"
+  },
+  {
+    "name": "Heroism",
+    "level": 1,
+    "school": "Enchantment",
+    "classes": "Bard, Paladin"
+  },
+  {
+    "name": "Hex",
+    "level": 1,
+    "school": "Enchantment",
+    "classes": "Warlock"
+  },
+  {
+    "name": "Hideous Laughter",
+    "level": 1,
+    "school": "Enchantment",
+    "classes": "Bard, Warlock, Wizard"
+  },
+  {
+    "name": "Hunter’s Mark",
+    "level": 1,
+    "school": "Divination",
+    "classes": "Ranger"
+  },
+  {
+    "name": "Ice Knife",
+    "level": 1,
+    "school": "Conjuration",
+    "classes": "Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Identify",
+    "level": 1,
+    "school": "Divination",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Illusory Script",
+    "level": 1,
+    "school": "Illusion",
+    "classes": "Bard, Warlock, Wizard"
+  },
+  {
+    "name": "Inflict Wounds",
+    "level": 1,
+    "school": "Necromancy",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Longstrider",
+    "level": 1,
+    "school": "Transmutation",
+    "classes": "Bard, Druid, Ranger, Wizard"
+  },
+  {
+    "name": "Mage Armor",
+    "level": 1,
+    "school": "Abjuration",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Magic Missile",
+    "level": 1,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Purify Food and Drink",
+    "level": 1,
+    "school": "Transmutation",
+    "classes": "Cleric, Druid, Paladin"
+  },
+  {
+    "name": "Ray of Sickness",
+    "level": 1,
+    "school": "Necromancy",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Sanctuary",
+    "level": 1,
+    "school": "Abjuration",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Searing Smite",
+    "level": 1,
+    "school": "Evocation",
+    "classes": "Paladin"
+  },
+  {
+    "name": "Shield",
+    "level": 1,
+    "school": "Abjuration",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Shield of Faith",
+    "level": 1,
+    "school": "Abjuration",
+    "classes": "Cleric, Paladin"
+  },
+  {
+    "name": "Silent Image",
+    "level": 1,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Sleep",
+    "level": 1,
+    "school": "Enchantment",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Speak with Animals",
+    "level": 1,
+    "school": "Divination",
+    "classes": "Bard, Druid, Ranger, Warlock"
+  },
+  {
+    "name": "Thunderwave",
+    "level": 1,
+    "school": "Evocation",
+    "classes": "Bard, Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Unseen Servant",
+    "level": 1,
+    "school": "Conjuration",
+    "classes": "Bard, Warlock, Wizard"
+  },
+  {
+    "name": "Alter Self",
+    "level": 2,
+    "school": "Transmutation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Arcane Lock",
+    "level": 2,
+    "school": "Abjuration",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Arcanist’s Magic Aura",
+    "level": 2,
+    "school": "Illusion",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Augury",
+    "level": 2,
+    "school": "Divination",
+    "classes": "Cleric, Druid, Wizard"
+  },
+  {
+    "name": "Barkskin",
+    "level": 2,
+    "school": "Transmutation",
+    "classes": "Druid, Ranger"
+  },
+  {
+    "name": "Blindness/Deafness",
+    "level": 2,
+    "school": "Transmutation",
+    "classes": "Bard, Cleric, Sorcerer, Wizard"
+  },
+  {
+    "name": "Blur",
+    "level": 2,
+    "school": "Illusion",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Calm Emotions",
+    "level": 2,
+    "school": "Enchantment",
+    "classes": "Bard, Cleric"
+  },
+  {
+    "name": "Continual Flame",
+    "level": 2,
+    "school": "Evocation",
+    "classes": "Cleric, Druid, Wizard"
+  },
+  {
+    "name": "Darkness",
+    "level": 2,
+    "school": "Evocation",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Detect Thoughts",
+    "level": 2,
+    "school": "Divination",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Dragon’s Breath",
+    "level": 2,
+    "school": "Transmutation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Enlarge/Reduce",
+    "level": 2,
+    "school": "Transmutation",
+    "classes": "Bard, Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Enthrall",
+    "level": 2,
+    "school": "Enchantment",
+    "classes": "Bard, Warlock"
+  },
+  {
+    "name": "Find Steed",
+    "level": 2,
+    "school": "Conjuration",
+    "classes": "Paladin"
+  },
+  {
+    "name": "Find Traps",
+    "level": 2,
+    "school": "Divination",
+    "classes": "Cleric, Druid, Ranger"
+  },
+  {
+    "name": "Flame Blade",
+    "level": 2,
+    "school": "Evocation",
+    "classes": "Druid, Sorcerer"
+  },
+  {
+    "name": "Flaming Sphere",
+    "level": 2,
+    "school": "Conjuration",
+    "classes": "Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Gentle Repose",
+    "level": 2,
+    "school": "Necromancy",
+    "classes": "Cleric, Paladin, Wizard"
+  },
+  {
+    "name": "Gust of Wind",
+    "level": 2,
+    "school": "Evocation",
+    "classes": "Druid, Ranger, Sorcerer, Wizard"
+  },
+  {
+    "name": "Heat Metal",
+    "level": 2,
+    "school": "Transmutation",
+    "classes": "Bard, Druid"
+  },
+  {
+    "name": "Invisibility",
+    "level": 2,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Knock",
+    "level": 2,
+    "school": "Transmutation",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Levitate",
+    "level": 2,
+    "school": "Transmutation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Locate Animals or Plants",
+    "level": 2,
+    "school": "Divination",
+    "classes": "Bard, Druid, Ranger"
+  },
+  {
+    "name": "Magic Mouth",
+    "level": 2,
+    "school": "Illusion",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Mind Spike",
+    "level": 2,
+    "school": "Divination",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Mirror Image",
+    "level": 2,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Misty Step",
+    "level": 2,
+    "school": "Conjuration",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Moonbeam",
+    "level": 2,
+    "school": "Evocation",
+    "classes": "Druid"
+  },
+  {
+    "name": "Pass without Trace",
+    "level": 2,
+    "school": "Abjuration",
+    "classes": "Druid, Ranger"
+  },
+  {
+    "name": "Phantasmal Force",
+    "level": 2,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Prayer of Healing",
+    "level": 2,
+    "school": "Abjuration",
+    "classes": "Cleric, Paladin"
+  },
+  {
+    "name": "Protection from Poison",
+    "level": 2,
+    "school": "Abjuration",
+    "classes": "Cleric, Druid, Paladin, Ranger"
+  },
+  {
+    "name": "Ray of Enfeeblement",
+    "level": 2,
+    "school": "Necromancy",
+    "classes": "Warlock, Wizard"
+  },
+  {
+    "name": "Rope Trick",
+    "level": 2,
+    "school": "Transmutation",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Scorching Ray",
+    "level": 2,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "See Invisibility",
+    "level": 2,
+    "school": "Divination",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Shatter",
+    "level": 2,
+    "school": "Evocation",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Shining Smite",
+    "level": 2,
+    "school": "Transmutation",
+    "classes": "Paladin"
+  },
+  {
+    "name": "Silence",
+    "level": 2,
+    "school": "Illusion",
+    "classes": "Bard, Cleric, Ranger"
+  },
+  {
+    "name": "Spider Climb",
+    "level": 2,
+    "school": "Transmutation",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Spike Growth",
+    "level": 2,
+    "school": "Transmutation",
+    "classes": "Druid, Ranger"
+  },
+  {
+    "name": "Spiritual Weapon",
+    "level": 2,
+    "school": "Evocation",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Warding Bond",
+    "level": 2,
+    "school": "Abjuration",
+    "classes": "Cleric, Paladin"
+  },
+  {
+    "name": "Web",
+    "level": 2,
+    "school": "Conjuration",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Zone of Truth",
+    "level": 2,
+    "school": "Enchantment",
+    "classes": "Bard, Cleric, Paladin"
+  },
+  {
+    "name": "Beacon of Hope",
+    "level": 3,
+    "school": "Abjuration",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Bestow Curse",
+    "level": 3,
+    "school": "Necromancy",
+    "classes": "Bard, Cleric, Wizard"
+  },
+  {
+    "name": "Blink",
+    "level": 3,
+    "school": "Transmutation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Call Lightning",
+    "level": 3,
+    "school": "Conjuration",
+    "classes": "Druid"
+  },
+  {
+    "name": "Clairvoyance",
+    "level": 3,
+    "school": "Divination",
+    "classes": "Bard, Cleric, Sorcerer, Wizard"
+  },
+  {
+    "name": "Conjure Animals",
+    "level": 3,
+    "school": "Conjuration",
+    "classes": "Druid, Ranger"
+  },
+  {
+    "name": "Counterspell",
+    "level": 3,
+    "school": "Abjuration",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Create Food and Water",
+    "level": 3,
+    "school": "Conjuration",
+    "classes": "Cleric, Paladin"
+  },
+  {
+    "name": "Fear",
+    "level": 3,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Fireball",
+    "level": 3,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Fly",
+    "level": 3,
+    "school": "Transmutation",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Gaseous Form",
+    "level": 3,
+    "school": "Transmutation",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Glyph of Warding",
+    "level": 3,
+    "school": "Abjuration",
+    "classes": "Bard, Cleric, Wizard"
+  },
+  {
+    "name": "Haste",
+    "level": 3,
+    "school": "Transmutation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Hypnotic Pattern",
+    "level": 3,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Lightning Bolt",
+    "level": 3,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Magic Circle",
+    "level": 3,
+    "school": "Abjuration",
+    "classes": "Cleric, Paladin, Warlock, Wizard"
+  },
+  {
+    "name": "Major Image",
+    "level": 3,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Mass Healing Word",
+    "level": 3,
+    "school": "Abjuration",
+    "classes": "Bard, Cleric"
+  },
+  {
+    "name": "Meld into Stone",
+    "level": 3,
+    "school": "Transmutation",
+    "classes": "Cleric, Druid, Ranger"
+  },
+  {
+    "name": "Nondetection",
+    "level": 3,
+    "school": "Abjuration",
+    "classes": "Bard, Ranger, Wizard"
+  },
+  {
+    "name": "Phantom Steed",
+    "level": 3,
+    "school": "Illusion",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Plant Growth",
+    "level": 3,
+    "school": "Transmutation",
+    "classes": "Bard, Druid, Ranger"
+  },
+  {
+    "name": "Remove Curse",
+    "level": 3,
+    "school": "Abjuration",
+    "classes": "Cleric, Paladin, Warlock, Wizard"
+  },
+  {
+    "name": "Revivify",
+    "level": 3,
+    "school": "Necromancy",
+    "classes": "Cleric, Druid, Paladin, Ranger"
+  },
+  {
+    "name": "Sending",
+    "level": 3,
+    "school": "Divination",
+    "classes": "Bard, Cleric, Wizard"
+  },
+  {
+    "name": "Sleet Storm",
+    "level": 3,
+    "school": "Conjuration",
+    "classes": "Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Slow",
+    "level": 3,
+    "school": "Transmutation",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Speak with Dead",
+    "level": 3,
+    "school": "Necromancy",
+    "classes": "Bard, Cleric, Wizard"
+  },
+  {
+    "name": "Speak with Plants",
+    "level": 3,
+    "school": "Transmutation",
+    "classes": "Bard, Druid, Ranger"
+  },
+  {
+    "name": "Spirit Guardians",
+    "level": 3,
+    "school": "Conjuration",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Stinking Cloud",
+    "level": 3,
+    "school": "Conjuration",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "System Reference Document 5.2.1",
+    "level": 3,
+    "school": "Necromancy",
+    "classes": "Cleric, Wizard"
+  },
+  {
+    "name": "Tiny Hut",
+    "level": 3,
+    "school": "Evocation",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Vampiric Touch",
+    "level": 3,
+    "school": "Necromancy",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Water Walk",
+    "level": 3,
+    "school": "Transmutation",
+    "classes": "Cleric, Druid, Ranger, Sorcerer"
+  },
+  {
+    "name": "Wind Wall",
+    "level": 3,
+    "school": "Evocation",
+    "classes": "Druid, Ranger"
+  },
+  {
+    "name": "Arcane Eye",
+    "level": 4,
+    "school": "Divination",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Aura of Life",
+    "level": 4,
+    "school": "Abjuration",
+    "classes": "Cleric, Paladin"
+  },
+  {
+    "name": "Blight",
+    "level": 4,
+    "school": "Conjuration",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Compulsion",
+    "level": 4,
+    "school": "Enchantment",
+    "classes": "Bard"
+  },
+  {
+    "name": "Confusion",
+    "level": 4,
+    "school": "Enchantment",
+    "classes": "Bard, Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Conjure Minor Elementals",
+    "level": 4,
+    "school": "Conjuration",
+    "classes": "Druid, Wizard"
+  },
+  {
+    "name": "Conjure Woodland Beings",
+    "level": 4,
+    "school": "Conjuration",
+    "classes": "Druid, Ranger"
+  },
+  {
+    "name": "Control Water",
+    "level": 4,
+    "school": "Transmutation",
+    "classes": "Cleric, Druid, Wizard"
+  },
+  {
+    "name": "Death Ward",
+    "level": 4,
+    "school": "Abjuration",
+    "classes": "Cleric, Paladin"
+  },
+  {
+    "name": "Dimension Door",
+    "level": 4,
+    "school": "Conjuration",
+    "classes": "Bard, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Divination",
+    "level": 4,
+    "school": "Divination",
+    "classes": "Cleric, Druid, Wizard"
+  },
+  {
+    "name": "Dominate Beast",
+    "level": 4,
+    "school": "Enchantment",
+    "classes": "Druid, Ranger, Sorcerer"
+  },
+  {
+    "name": "Fabricate",
+    "level": 4,
+    "school": "Transmutation",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Faithful Hound",
+    "level": 4,
+    "school": "Conjuration",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Fire Shield",
+    "level": 4,
+    "school": "Evocation",
+    "classes": "Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Freedom of Movement",
+    "level": 4,
+    "school": "Abjuration",
+    "classes": "Bard, Cleric, Druid, Ranger"
+  },
+  {
+    "name": "Giant Insect",
+    "level": 4,
+    "school": "Conjuration",
+    "classes": "Druid"
+  },
+  {
+    "name": "Greater Invisibility",
+    "level": 4,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Hallucinatory Terrain",
+    "level": 4,
+    "school": "Illusion",
+    "classes": "Bard, Druid, Warlock, Wizard"
+  },
+  {
+    "name": "Ice Storm",
+    "level": 4,
+    "school": "Evocation",
+    "classes": "Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Phantasmal Killer",
+    "level": 4,
+    "school": "Illusion",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Polymorph",
+    "level": 4,
+    "school": "Transmutation",
+    "classes": "Bard, Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Resilient Sphere",
+    "level": 4,
+    "school": "Abjuration",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Stone Shape",
+    "level": 4,
+    "school": "Transmutation",
+    "classes": "Cleric, Druid, Wizard"
+  },
+  {
+    "name": "Vitriolic Sphere",
+    "level": 4,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Wall of Fire",
+    "level": 4,
+    "school": "Evocation",
+    "classes": "Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Animate Objects",
+    "level": 5,
+    "school": "Transmutation",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Antilife Shell",
+    "level": 5,
+    "school": "Abjuration",
+    "classes": "Druid"
+  },
+  {
+    "name": "Arcane Hand",
+    "level": 5,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Awaken",
+    "level": 5,
+    "school": "Transmutation",
+    "classes": "Bard, Druid"
+  },
+  {
+    "name": "Cloudkill",
+    "level": 5,
+    "school": "Conjuration",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Commune",
+    "level": 5,
+    "school": "Divination",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Commune with Nature",
+    "level": 5,
+    "school": "Divination",
+    "classes": "Druid, Ranger"
+  },
+  {
+    "name": "Cone of Cold",
+    "level": 5,
+    "school": "Evocation",
+    "classes": "Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Conjure Elemental",
+    "level": 5,
+    "school": "Conjuration",
+    "classes": "Druid, Wizard"
+  },
+  {
+    "name": "Contact Other Plane",
+    "level": 5,
+    "school": "Divination",
+    "classes": "Warlock, Wizard"
+  },
+  {
+    "name": "Contagion",
+    "level": 5,
+    "school": "Necromancy",
+    "classes": "Cleric, Druid"
+  },
+  {
+    "name": "Creation",
+    "level": 5,
+    "school": "Illusion",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Dispel Evil and Good",
+    "level": 5,
+    "school": "Abjuration",
+    "classes": "Cleric, Paladin"
+  },
+  {
+    "name": "Dominate Person",
+    "level": 5,
+    "school": "Enchantment",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Dream",
+    "level": 5,
+    "school": "Illusion",
+    "classes": "Bard, Warlock, Wizard"
+  },
+  {
+    "name": "Flame Strike",
+    "level": 5,
+    "school": "Evocation",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Hallow",
+    "level": 5,
+    "school": "Abjuration",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Insect Plague",
+    "level": 5,
+    "school": "Conjuration",
+    "classes": "Cleric, Druid, Sorcerer"
+  },
+  {
+    "name": "Legend Lore",
+    "level": 5,
+    "school": "Divination",
+    "classes": "Bard, Cleric, Wizard"
+  },
+  {
+    "name": "Mass Cure Wounds",
+    "level": 5,
+    "school": "Abjuration",
+    "classes": "Bard, Cleric, Druid"
+  },
+  {
+    "name": "Mislead",
+    "level": 5,
+    "school": "Illusion",
+    "classes": "Bard, Warlock, Wizard"
+  },
+  {
+    "name": "Modify Memory",
+    "level": 5,
+    "school": "Enchantment",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Passwall",
+    "level": 5,
+    "school": "Transmutation",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Raise Dead",
+    "level": 5,
+    "school": "Necromancy",
+    "classes": "Bard, Cleric, Paladin"
+  },
+  {
+    "name": "Reincarnate",
+    "level": 5,
+    "school": "Necromancy",
+    "classes": "Druid"
+  },
+  {
+    "name": "Seeming",
+    "level": 5,
+    "school": "Illusion",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Telekinesis",
+    "level": 5,
+    "school": "Transmutation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Telepathic Bond",
+    "level": 5,
+    "school": "Divination",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Teleportation Circle",
+    "level": 5,
+    "school": "Conjuration",
+    "classes": "Bard, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Tree Stride",
+    "level": 5,
+    "school": "Conjuration",
+    "classes": "Druid, Ranger"
+  },
+  {
+    "name": "Wall of Stone",
+    "level": 5,
+    "school": "Evocation",
+    "classes": "Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Blade Barrier",
+    "level": 6,
+    "school": "Evocation",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Chain Lightning",
+    "level": 6,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Circle of Death",
+    "level": 6,
+    "school": "Necromancy",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Conjure Fey",
+    "level": 6,
+    "school": "Conjuration",
+    "classes": "Druid"
+  },
+  {
+    "name": "Contingency",
+    "level": 6,
+    "school": "Abjuration",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Create Undead",
+    "level": 6,
+    "school": "Necromancy",
+    "classes": "Cleric, Warlock, Wizard"
+  },
+  {
+    "name": "Disintegrate",
+    "level": 6,
+    "school": "Transmutation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Eyebite",
+    "level": 6,
+    "school": "Necromancy",
+    "classes": "Bard, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Find the Path",
+    "level": 6,
+    "school": "Divination",
+    "classes": "Bard, Cleric, Druid"
+  },
+  {
+    "name": "Flesh to Stone",
+    "level": 6,
+    "school": "Transmutation",
+    "classes": "Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Forbiddance",
+    "level": 6,
+    "school": "Abjuration",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Freezing Sphere",
+    "level": 6,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Globe of Invulnerability",
+    "level": 6,
+    "school": "Abjuration",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Guards and Wards",
+    "level": 6,
+    "school": "Abjuration",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Harm",
+    "level": 6,
+    "school": "Necromancy",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Heal",
+    "level": 6,
+    "school": "Abjuration",
+    "classes": "Cleric, Druid"
+  },
+  {
+    "name": "Heroes’ Feast",
+    "level": 6,
+    "school": "Conjuration",
+    "classes": "Bard, Cleric, Druid"
+  },
+  {
+    "name": "Instant Summons",
+    "level": 6,
+    "school": "Conjuration",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Irresistible Dance",
+    "level": 6,
+    "school": "Enchantment",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Magic Jar",
+    "level": 6,
+    "school": "Necromancy",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Mass Suggestion",
+    "level": 6,
+    "school": "Enchantment",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Move Earth",
+    "level": 6,
+    "school": "Transmutation",
+    "classes": "Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Planar Ally",
+    "level": 6,
+    "school": "Conjuration",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Programmed Illusion",
+    "level": 6,
+    "school": "Illusion",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Transport via Plants",
+    "level": 6,
+    "school": "Conjuration",
+    "classes": "Druid"
+  },
+  {
+    "name": "Wall of Ice",
+    "level": 6,
+    "school": "Evocation",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Wall of Thorns",
+    "level": 6,
+    "school": "Conjuration",
+    "classes": "Druid"
+  },
+  {
+    "name": "Wind Walk",
+    "level": 6,
+    "school": "Transmutation",
+    "classes": "Druid"
+  },
+  {
+    "name": "Word of Recall",
+    "level": 6,
+    "school": "Conjuration",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Arcane Sword",
+    "level": 7,
+    "school": "Evocation",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Conjure Celestial",
+    "level": 7,
+    "school": "Conjuration",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Delayed Blast Fireball",
+    "level": 7,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Divine Word",
+    "level": 7,
+    "school": "Evocation",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Finger of Death",
+    "level": 7,
+    "school": "Necromancy",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Fire Storm",
+    "level": 7,
+    "school": "Evocation",
+    "classes": "Cleric, Druid, Sorcerer"
+  },
+  {
+    "name": "Forcecage",
+    "level": 7,
+    "school": "Evocation",
+    "classes": "Bard, Warlock, Wizard"
+  },
+  {
+    "name": "Magnificent Mansion",
+    "level": 7,
+    "school": "Conjuration",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Mirage Arcane",
+    "level": 7,
+    "school": "Illusion",
+    "classes": "Bard, Druid, Wizard"
+  },
+  {
+    "name": "Prismatic Spray",
+    "level": 7,
+    "school": "Evocation",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Project Image",
+    "level": 7,
+    "school": "Illusion",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Resurrection",
+    "level": 7,
+    "school": "Necromancy",
+    "classes": "Bard, Cleric"
+  },
+  {
+    "name": "Reverse Gravity",
+    "level": 7,
+    "school": "Transmutation",
+    "classes": "Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Sequester",
+    "level": 7,
+    "school": "Transmutation",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Simulacrum",
+    "level": 7,
+    "school": "Illusion",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Symbol",
+    "level": 7,
+    "school": "Abjuration",
+    "classes": "Bard, Cleric, Druid, Wizard"
+  },
+  {
+    "name": "Teleport",
+    "level": 7,
+    "school": "Conjuration",
+    "classes": "Bard, Sorcerer, Wizard"
+  },
+  {
+    "name": "Animal Shapes",
+    "level": 8,
+    "school": "Transmutation",
+    "classes": "Druid"
+  },
+  {
+    "name": "Antimagic Field",
+    "level": 8,
+    "school": "Abjuration",
+    "classes": "Cleric, Wizard"
+  },
+  {
+    "name": "Befuddlement",
+    "level": 8,
+    "school": "Enchantment",
+    "classes": "Bard, Druid, Warlock, Wizard"
+  },
+  {
+    "name": "Clone",
+    "level": 8,
+    "school": "Necromancy",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Control Weather",
+    "level": 8,
+    "school": "Transmutation",
+    "classes": "Cleric, Druid, Wizard"
+  },
+  {
+    "name": "Demiplane",
+    "level": 8,
+    "school": "Conjuration",
+    "classes": "Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Glibness",
+    "level": 8,
+    "school": "Enchantment",
+    "classes": "Bard, Warlock"
+  },
+  {
+    "name": "Holy Aura",
+    "level": 8,
+    "school": "Abjuration",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Incendiary Cloud",
+    "level": 8,
+    "school": "Conjuration",
+    "classes": "Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Maze",
+    "level": 8,
+    "school": "Conjuration",
+    "classes": "Wizard"
+  },
+  {
+    "name": "Mind Blank",
+    "level": 8,
+    "school": "Abjuration",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Sunburst",
+    "level": 8,
+    "school": "Evocation",
+    "classes": "Cleric, Druid, Sorcerer, Wizard"
+  },
+  {
+    "name": "Tsunami",
+    "level": 8,
+    "school": "Conjuration",
+    "classes": "Druid"
+  },
+  {
+    "name": "Astral Projection",
+    "level": 9,
+    "school": "Necromancy",
+    "classes": "Cleric, Warlock, Wizard"
+  },
+  {
+    "name": "Foresight",
+    "level": 9,
+    "school": "Divination",
+    "classes": "Bard, Druid, Warlock, Wizard"
+  },
+  {
+    "name": "Gate",
+    "level": 9,
+    "school": "Conjuration",
+    "classes": "Cleric, Sorcerer, Warlock, Wizard"
+  },
+  {
+    "name": "Imprisonment",
+    "level": 9,
+    "school": "Abjuration",
+    "classes": "Warlock, Wizard"
+  },
+  {
+    "name": "Mass Heal",
+    "level": 9,
+    "school": "Abjuration",
+    "classes": "Cleric"
+  },
+  {
+    "name": "Meteor Swarm",
+    "level": 9,
+    "school": "Evocation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "Prestidigitation",
+    "level": 9,
+    "school": "Enchantment",
+    "classes": "Bard, Cleric"
+  },
+  {
+    "name": "Prismatic Wall",
+    "level": 9,
+    "school": "Abjuration",
+    "classes": "Bard, Wizard"
+  },
+  {
+    "name": "Shapechange",
+    "level": 9,
+    "school": "Transmutation",
+    "classes": "Druid, Wizard"
+  },
+  {
+    "name": "Storm of Vengeance",
+    "level": 9,
+    "school": "Conjuration",
+    "classes": "Druid"
+  },
+  {
+    "name": "Time Stop",
+    "level": 9,
+    "school": "Transmutation",
+    "classes": "Sorcerer, Wizard"
+  },
+  {
+    "name": "True Polymorph",
+    "level": 9,
+    "school": "Transmutation",
+    "classes": "Bard, Warlock, Wizard"
+  },
+  {
+    "name": "True Resurrection",
+    "level": 9,
+    "school": "Necromancy",
+    "classes": "Cleric, Druid"
+  },
+  {
+    "name": "Weird",
+    "level": 9,
+    "school": "Illusion",
+    "classes": "Warlock, Wizard"
+  },
+  {
+    "name": "Wish",
+    "level": 9,
+    "school": "Conjuration",
+    "classes": "Sorcerer, Wizard"
+  }
+]
