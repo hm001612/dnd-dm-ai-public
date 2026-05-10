@@ -29,7 +29,7 @@ export default function GameScreen({ party: initialParty, module, onEndGame }) {
   const [voiceEnabled, setVoiceEnabled] = useState(false)
   const [voiceListening, setVoiceListening] = useState(false)
   const [gameStarted, setGameStarted] = useState(false)
-  const [ttsVoice, setTtsVoice] = useState('gtts')
+  const [ttsVoice, setTtsVoice] = useState('zh-CN-XiaoxiaoNeural')
   const recognitionRef = useRef(null)
 
   const activeChar = useMemo(

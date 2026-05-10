@@ -200,7 +200,7 @@ export function normalizeModule(raw, fallbackFilename = '') {
 // Returns a regular HTTP URL pointing at a cached MP3 on the server. The
 // browser's <audio> element loads it with native Range/streaming support —
 // more reliable than blob URLs on mobile and inside sandboxed iframes.
-export async function fetchTTS(text, voice = 'gtts') {
+export async function fetchTTS(text, voice = 'zh-CN-XiaoxiaoNeural') {
   // 60s timeout — TTS synthesis is typically <2s; cap prevents silent hangs
   // if the server restarts or Vite HMR reloads mid-flight (Safari reports
   // these as the cryptic "Load failed").

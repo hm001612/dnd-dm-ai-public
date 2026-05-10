@@ -2,16 +2,14 @@ import { useState, useRef, useEffect } from 'react'
 import { fetchTTS } from '../services/gameService.js'
 
 // Supported voices. Kept in sync with ALLOWED_VOICES in server.js.
-// gTTS is listed first as the default — its MP3 output is a clean single-
-// pass encode that plays smoothly on every device.
+// All are Microsoft Azure Neural voices via the free edge-tts endpoint
+// (msedge-tts npm package, no API key needed).
 const EDGE_VOICES = [
-  { id: 'gtts', label: '谷歌（推荐·最流畅）' },
-  { id: 'gtts:zh-TW', label: '谷歌（繁体中文）' },
+  { id: 'zh-CN-XiaoxiaoNeural', label: '晓晓（女声·温暖，推荐）' },
   { id: 'zh-CN-YunyangNeural', label: '云扬（男声·沉稳叙事）' },
   { id: 'zh-CN-YunjianNeural', label: '云健（男声·激昂戏剧）' },
   { id: 'zh-CN-YunxiNeural', label: '云希（男声·青年）' },
   { id: 'zh-CN-YunxiaNeural', label: '云夏（男声·活泼少年）' },
-  { id: 'zh-CN-XiaoxiaoNeural', label: '晓晓（女声·温暖）' },
   { id: 'zh-CN-XiaoyiNeural', label: '晓伊（女声·生动）' },
   { id: 'zh-CN-liaoning-XiaobeiNeural', label: '晓北（女声·东北口音）' },
   { id: 'zh-CN-shaanxi-XiaoniNeural', label: '晓妮（女声·陕西口音）' }
@@ -59,7 +57,7 @@ export default function VoiceControls({ onTranscript, enabled, onToggle, ttsVoic
     setTesting(true)
     setTestError('')
     try {
-      const url = await fetchTTS('欢迎来到地下城，冒险者。你的命运即将改变。', ttsVoice || 'gtts')
+      const url = await fetchTTS('欢迎来到地下城，冒险者。你的命运即将改变。', ttsVoice || 'zh-CN-XiaoxiaoNeural')
       // Set via state so React re-renders the <audio> element visible.
       // Even if autoplay is blocked, the user now sees a playable control.
       setTestAudioUrl(url)

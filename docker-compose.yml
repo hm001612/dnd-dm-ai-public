@@ -1,0 +1,28 @@
+# 自托管 D&D AI DM 服务端
+# 用法：
+#   cp .env.example .env  # 填入 AI_API_KEY
+#   docker compose up -d
+#   访问 http://localhost:3000
+
+services:
+  dnd-dm:
+    build: .
+    image: dnd-dm-ai:latest
+    container_name: dnd-dm
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # 直接从宿主机 shell / .env 文件读取
+      - AI_API_KEY=${AI_API_KEY}
+      - AI_BASE_URL=${AI_BASE_URL:-https://openrouter.ai/api/v1}
+      - AI_CHAT_MODELS=${AI_CHAT_MODELS:-anthropic/claude-3.5-sonnet,google/gemini-2.0-flash-001,openai/gpt-4o-mini}
+      - AI_MODULE_MODELS=${AI_MODULE_MODELS:-google/gemini-2.0-flash-001,anthropic/claude-3.5-sonnet}
+      - PORT=3000
+      - NODE_ENV=production
+    volumes:
+      # 缓存 TTS 合成结果，重启后复用
+      - tts-cache:/app/.tts-cache
+
+volumes:
+  tts-cache:

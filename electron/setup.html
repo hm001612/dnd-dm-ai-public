@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>D&D AI DM — 首次设置</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --panel: #232340;
+    --border: rgba(255,255,255,0.12);
+    --text: #e8e6f0;
+    --text-dim: #9a94b5;
+    --accent: #c43535;
+    --accent-hover: #e04040;
+    --input-bg: rgba(0,0,0,0.25);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 28px 32px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    user-select: none;
+  }
+  h1 {
+    font-size: 1.35rem;
+    margin: 0 0 4px;
+    font-family: 'Cinzel', 'Times New Roman', serif;
+    letter-spacing: 0.5px;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    margin-bottom: 22px;
+  }
+  label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin: 14px 0 5px;
+  }
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 9px 11px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 0.88rem;
+    outline: none;
+    user-select: text;
+    font-family: 'Menlo', 'Consolas', monospace;
+  }
+  input:focus { border-color: var(--accent); }
+  .hint {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .hint a {
+    color: #8ab4ff;
+    text-decoration: none;
+  }
+  .hint a:hover { text-decoration: underline; }
+  .row { display: flex; gap: 10px; margin-top: 24px; }
+  button {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    font-size: 0.88rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  button:hover { background: #2d2d50; }
+  button.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 600;
+  }
+  button.primary:hover { background: var(--accent-hover); }
+  button.primary:disabled {
+    background: #555;
+    border-color: #555;
+    cursor: not-allowed;
+  }
+  .error {
+    color: #ff8b8b;
+    font-size: 0.78rem;
+    margin-top: 12px;
+    min-height: 1em;
+  }
+  details {
+    margin-top: 18px;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+  }
+  details summary {
+    cursor: pointer;
+    padding: 4px 0;
+  }
+  details[open] summary { color: var(--text); }
+</style>
+</head>
+<body>
+  <h1>欢迎来到 D&amp;D AI DM</h1>
+  <div class="subtitle">请先配置一个 AI 提供商。默认使用 OpenRouter（可接入 Claude/Gemini/GPT 等模型）。</div>
+
+  <label for="apiKey">API Key</label>
+  <input type="password" id="apiKey" placeholder="sk-or-v1-..." autocomplete="off" spellcheck="false">
+  <div class="hint">
+    没有 Key？前往 <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a> 注册并创建。
+    Key 仅保存在你本地（macOS 钥匙串 / Windows 凭据管理器），不会上传。
+  </div>
+
+  <details>
+    <summary>高级设置（可选）</summary>
+
+    <label for="baseUrl">Base URL</label>
+    <input type="text" id="baseUrl" placeholder="https://openrouter.ai/api/v1" spellcheck="false">
+    <div class="hint">OpenAI 兼容的接口地址。保持默认即可，除非你使用自建网关或其他兼容服务。</div>
+
+    <label for="chatModels">Chat 模型列表</label>
+    <input type="text" id="chatModels" placeholder="anthropic/claude-3.5-sonnet,google/gemini-2.0-flash-001,openai/gpt-4o-mini" spellcheck="false">
+    <div class="hint">逗号分隔。DM 叙事时按顺序依次尝试，失败自动切下一个。</div>
+
+    <label for="moduleModels">模组生成模型列表</label>
+    <input type="text" id="moduleModels" placeholder="google/gemini-2.0-flash-001,anthropic/claude-3.5-sonnet" spellcheck="false">
+    <div class="hint">用于生成/解析模组的模型。建议至少放一个长上下文模型。</div>
+  </details>
+
+  <div class="error" id="error"></div>
+
+  <div class="row">
+    <button type="button" id="skipBtn">稍后再说</button>
+    <button type="button" class="primary" id="saveBtn">保存并启动</button>
+  </div>
+
+<script>
+  const apiKeyInput = document.getElementById('apiKey')
+  const baseUrlInput = document.getElementById('baseUrl')
+  const chatModelsInput = document.getElementById('chatModels')
+  const moduleModelsInput = document.getElementById('moduleModels')
+  const saveBtn = document.getElementById('saveBtn')
+  const skipBtn = document.getElementById('skipBtn')
+  const errorEl = document.getElementById('error')
+
+  apiKeyInput.focus()
+
+  async function save() {
+    const key = apiKeyInput.value.trim()
+    if (!key) {
+      errorEl.textContent = '请填入 API Key，或点击"稍后再说"。'
+      apiKeyInput.focus()
+      return
+    }
+    errorEl.textContent = ''
+    saveBtn.disabled = true
+    saveBtn.textContent = '保存中...'
+    try {
+      await window.electronAPI.saveSetup({
+        apiKey: key,
+        baseUrl: baseUrlInput.value.trim() || undefined,
+        chatModels: chatModelsInput.value.trim() || undefined,
+        moduleModels: moduleModelsInput.value.trim() || undefined
+      })
+    } catch (e) {
+      errorEl.textContent = '保存失败：' + (e && e.message ? e.message : String(e))
+      saveBtn.disabled = false
+      saveBtn.textContent = '保存并启动'
+    }
+  }
+
+  saveBtn.addEventListener('click', save)
+  apiKeyInput.addEventListener('keydown', e => { if (e.key === 'Enter') save() })
+  skipBtn.addEventListener('click', () => window.close())
+</script>
+</body>
+</html>

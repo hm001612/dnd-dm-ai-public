@@ -2,30 +2,117 @@ import express from 'express'
 import cors from 'cors'
 import path from 'path'
 import fs from 'fs'
+import os from 'os'
 import crypto from 'crypto'
 import { fileURLToPath } from 'url'
 import { spawn } from 'child_process'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// ---- Config loader -------------------------------------------------------
+// Read KEY=VALUE pairs from a file, assigning to process.env WITHOUT
+// overwriting already-set vars (env takes priority over files). This lets
+// users drop a .env next to the app, and also lets Electron write a user
+// config file to ~/.dnd-dm-ai/config.env for first-run onboarding.
+function loadEnvFile(p) {
+  if (!p || !fs.existsSync(p)) return
+  try {
+    const raw = fs.readFileSync(p, 'utf8')
+    for (const line of raw.split(/\r?\n/)) {
+      const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/)
+      if (!m || line.trim().startsWith('#')) continue
+      const key = m[1]
+      let val = m[2]
+      // Strip surrounding quotes if present
+      if ((val.startsWith('"') && val.endsWith('"')) ||
+          (val.startsWith("'") && val.endsWith("'"))) {
+        val = val.slice(1, -1)
+      }
+      if (!process.env[key]) process.env[key] = val
+    }
+  } catch (e) {
+    console.warn(`[config] failed to load ${p}:`, e.message)
+  }
+}
+
+// Load in priority order: project-local .env first, then user config dir.
+// Env vars set by the shell beat both (loadEnvFile never overwrites).
+loadEnvFile(path.join(__dirname, '.env'))
+loadEnvFile(path.join(os.homedir(), '.dnd-dm-ai', 'config.env'))
+
 const app = express()
 const PORT = process.env.PORT || 3000
-const AI_API_KEY = process.env.AI_GATEWAY_API_KEY || ''
-const AI_BASE_URL = 'https://ai-gateway.happycapy.ai/api/v1'
+
+// ---- AI provider config --------------------------------------------------
+// Default is OpenRouter (public, OpenAI-compatible, supports Claude / Gemini
+// / GPT via a single API). Users override by setting env vars in their .env
+// or (for the Electron build) via the first-run config window which writes
+// ~/.dnd-dm-ai/config.env.
+//
+// Accepted keys (in priority order for the API key):
+//   AI_API_KEY              — generic, preferred for distribution
+//   OPENROUTER_API_KEY      — standard name if user is using OpenRouter
+//   AI_GATEWAY_API_KEY      — legacy name for the internal Happycapy gateway
+//
+// AI_BASE_URL / AI_CHAT_MODELS / AI_MODULE_MODELS can be overridden to point
+// at any other OpenAI-compatible endpoint (self-hosted LiteLLM, vLLM, Ollama
+// with LiteLLM proxy, Azure OpenAI, etc).
+const AI_API_KEY = process.env.AI_API_KEY
+  || process.env.OPENROUTER_API_KEY
+  || process.env.AI_GATEWAY_API_KEY
+  || ''
+const AI_BASE_URL = process.env.AI_BASE_URL || 'https://openrouter.ai/api/v1'
+
+// Fallback chain for /api/chat. Comma-separated env override.
+// Defaults are OpenRouter model IDs known to support long-context Chinese.
+const CHAT_MODELS = (process.env.AI_CHAT_MODELS || [
+  'anthropic/claude-3.5-sonnet',
+  'google/gemini-2.0-flash-001',
+  'openai/gpt-4o-mini',
+  'anthropic/claude-3-haiku'
+].join(',')).split(',').map(s => s.trim()).filter(Boolean)
+
+// Fallback chain for /api/parse-module and /api/generate-module.
+// These need 3k-8k token outputs so we prefer larger-context models first.
+const MODULE_MODELS = (process.env.AI_MODULE_MODELS || [
+  'google/gemini-2.0-flash-001',
+  'anthropic/claude-3.5-sonnet',
+  'anthropic/claude-3-haiku'
+].join(',')).split(',').map(s => s.trim()).filter(Boolean)
 
 app.use(cors())
 app.use(express.json({ limit: '10mb' }))
 
+// Config status — lets the frontend detect a missing API key on boot and
+// show a friendly "click here to configure" prompt instead of a silent 401.
+app.get('/api/config/status', (req, res) => {
+  const provider = /openrouter\.ai/i.test(AI_BASE_URL) ? 'openrouter'
+                 : /happycapy/i.test(AI_BASE_URL) ? 'happycapy-gateway'
+                 : 'custom'
+  res.json({
+    configured: !!AI_API_KEY,
+    provider,
+    baseUrl: AI_BASE_URL,
+    chatModels: CHAT_MODELS,
+    moduleModels: MODULE_MODELS
+  })
+})
+
+function requireApiKey(res) {
+  if (AI_API_KEY) return true
+  res.status(503).json({
+    error: '未配置 AI API Key。请在设置中填入 OpenRouter API Key，或在 .env 文件中设置 AI_API_KEY。',
+    code: 'NO_API_KEY'
+  })
+  return false
+}
+
 // AI chat endpoint - DM responses
 app.post('/api/chat', async (req, res) => {
+  if (!requireApiKey(res)) return
   const { messages, systemPrompt } = req.body
-  const modelCandidates = [
-    'anthropic/claude-sonnet-4.6',
-    'openai/gpt-4.1',
-    'google/gemini-3.1-flash-preview',
-    'anthropic/claude-haiku-4.5'
-  ]
   let lastErr = null
-  for (const model of modelCandidates) {
+  for (const model of CHAT_MODELS) {
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), 90000)
     try {
@@ -73,6 +160,7 @@ app.post('/api/chat', async (req, res) => {
 
 // Generate new module endpoint
 app.post('/api/generate-module', async (req, res) => {
+  if (!requireApiKey(res)) return
   const { theme, setting, difficulty, tone, duration } = req.body
   const prompt = `你是一个专业的龙与地下城5e版冒险模组设计师。请根据以下参数生成一个完整的冒险模组，以JSON格式返回：
 
@@ -120,7 +208,7 @@ app.post('/api/generate-module', async (req, res) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-sonnet-4.6',
+        model: MODULE_MODELS[0],
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 3000
       })
@@ -143,6 +231,7 @@ app.post('/api/generate-module', async (req, res) => {
 
 // Parse uploaded module (text / markdown → structured JSON)
 app.post('/api/parse-module', async (req, res) => {
+  if (!requireApiKey(res)) return
   const { text, filename } = req.body
   if (!text || text.trim().length < 50) {
     return res.status(400).json({ error: '模组内容太短，无法解析' })
@@ -182,13 +271,9 @@ ${snippet}
 }`
 
   // Try models in order; if one times out / 5xx's, fall back to the next.
-  const modelCandidates = [
-    'openai/gpt-4.1',
-    'google/gemini-3.1-flash-preview',
-    'anthropic/claude-haiku-4.5'
-  ]
+  // Prefer the larger-context model first for parsing 8k-token structured JSON.
   let lastErr = null
-  for (const model of modelCandidates) {
+  for (const model of MODULE_MODELS) {
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), 90000)
     try {
@@ -201,7 +286,7 @@ ${snippet}
         body: JSON.stringify({
           model,
           messages: [{ role: 'user', content: prompt }],
-          max_tokens: 2500
+          max_tokens: 8000
         }),
         signal: controller.signal
       })
@@ -264,24 +349,23 @@ function repairTruncatedJson(s) {
   return null
 }
 
-// Text-to-speech endpoint: streams MP3 bytes rendered by edge-tts worker.
+// Text-to-speech endpoint: renders Microsoft Azure Neural voices via the
+// public edge-tts API (msedge-tts npm package — pure Node, no Python deps).
 // Accessibility feature: lets visually-impaired players hear DM narration and
 // download a playable audio file of every beat of the story.
-// Supported voices. gTTS (Google) is the default since its MP3 output is
-// a single clean offline encode (more reliable across devices than Microsoft
-// edge-tts's streamed chunks). Edge voices are kept as fallback options.
+import { MsEdgeTTS, OUTPUT_FORMAT } from 'msedge-tts'
+import ffmpegStatic from 'ffmpeg-static'
+
+const DEFAULT_VOICE = 'zh-CN-XiaoxiaoNeural'
 const ALLOWED_VOICES = new Set([
-  'gtts',                  // Google Translate TTS, zh-CN (default)
-  'gtts:zh-CN',            // Explicit zh-CN
-  'gtts:zh-TW',            // Traditional Mandarin
-  'zh-CN-YunyangNeural',   // Edge: Male, calm narrator
-  'zh-CN-YunjianNeural',   // Edge: Male, dramatic
-  'zh-CN-YunxiNeural',     // Edge: Male, young
-  'zh-CN-YunxiaNeural',    // Edge: Male, child-like
-  'zh-CN-XiaoxiaoNeural',  // Edge: Female, warm
-  'zh-CN-XiaoyiNeural',    // Edge: Female, lively
-  'zh-CN-liaoning-XiaobeiNeural', // Edge: Female, NE China accent
-  'zh-CN-shaanxi-XiaoniNeural'    // Edge: Female, Shaanxi accent
+  'zh-CN-XiaoxiaoNeural',  // Female, warm — DEFAULT
+  'zh-CN-YunyangNeural',   // Male, calm narrator (recommended for DM)
+  'zh-CN-YunjianNeural',   // Male, dramatic
+  'zh-CN-YunxiNeural',     // Male, young
+  'zh-CN-YunxiaNeural',    // Male, child-like
+  'zh-CN-XiaoyiNeural',    // Female, lively
+  'zh-CN-liaoning-XiaobeiNeural', // Female, NE China accent
+  'zh-CN-shaanxi-XiaoniNeural'    // Female, Shaanxi accent
 ])
 
 function cleanForSpeech(s) {
@@ -295,18 +379,12 @@ function cleanForSpeech(s) {
   return out.slice(0, 2500)
 }
 
-// ffmpeg is REQUIRED. The Python worker emits raw PCM (to avoid MP3 stitch
-// seams and tandem-coding artifacts); ffmpeg is the only thing that can
-// encode that PCM to a playable MP3 for the browser.
-import { execSync } from 'child_process'
-let HAS_FFMPEG = false
-try {
-  execSync('ffmpeg -version', { stdio: 'ignore' })
-  HAS_FFMPEG = true
-  console.log('ffmpeg detected; TTS pipeline ready')
-} catch {
-  console.error('ffmpeg NOT found. TTS will fail. Install: apt-get install -y ffmpeg')
-}
+// ffmpeg is REQUIRED for MP3 post-processing (loudnorm + highpass).
+// We prefer the bundled ffmpeg-static binary (zero system deps, works on
+// Mac/Win/Linux out of the box), falling back to the system PATH ffmpeg
+// if the bundled binary is missing (e.g. stripped by electron-builder).
+const FFMPEG_BIN = ffmpegStatic && fs.existsSync(ffmpegStatic) ? ffmpegStatic : 'ffmpeg'
+console.log(`ffmpeg: ${FFMPEG_BIN === ffmpegStatic ? 'bundled' : 'system'} (${FFMPEG_BIN})`)
 
 // Cache dir for TTS MP3 files. We save each generation to disk so the browser
 // can load it via a normal HTTP GET with Range support (instead of a blob
@@ -314,12 +392,31 @@ try {
 const TTS_CACHE_DIR = path.join(__dirname, '.tts-cache')
 try { fs.mkdirSync(TTS_CACHE_DIR, { recursive: true }) } catch {}
 
+// Synthesize speech → MP3 bytes (Buffer) via msedge-tts.
+// Uses Microsoft Azure's public edge-tts endpoint (same service Edge's
+// Read-Aloud feature uses — no API key required). The library only exposes
+// MP3/Opus outputs, so we take the highest-quality MP3 (24kHz 96kbps mono)
+// and let ffmpeg post-process in a single re-encode pass.
+async function synthSpeechMp3(text, voice) {
+  const tts = new MsEdgeTTS()
+  await tts.setMetadata(voice, OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3)
+  const { audioStream } = tts.toStream(text)
+  return await new Promise((resolve, reject) => {
+    const chunks = []
+    audioStream.on('data', d => chunks.push(d))
+    audioStream.on('end', () => resolve(Buffer.concat(chunks)))
+    audioStream.on('error', reject)
+    // Safety timeout — if the WebSocket hangs, fail fast instead of spinning.
+    setTimeout(() => reject(new Error('msedge-tts timeout after 30s')), 30000)
+  })
+}
+
 app.post('/api/tts', async (req, res) => {
   const { text, voice } = req.body || {}
   if (!text || typeof text !== 'string') {
     return res.status(400).json({ error: 'text is required' })
   }
-  const safeVoice = ALLOWED_VOICES.has(voice) ? voice : 'gtts'
+  const safeVoice = ALLOWED_VOICES.has(voice) ? voice : DEFAULT_VOICE
   const speech = cleanForSpeech(text)
   if (!speech) {
     return res.status(400).json({ error: 'text is empty after cleaning' })
@@ -330,74 +427,44 @@ app.post('/api/tts', async (req, res) => {
   const cachePath = path.join(TTS_CACHE_DIR, `${cacheId}.mp3`)
 
   if (!fs.existsSync(cachePath)) {
-    if (!HAS_FFMPEG) {
-      return res.status(500).json({ error: 'ffmpeg is required for TTS but is not installed' })
+    // Stage 1: msedge-tts → MP3 bytes @ 24kHz 96kbps mono.
+    // (The library doesn't expose raw PCM; MP3 is the highest-fidelity
+    // output it supports. One re-encode to 160kbps is acceptable given the
+    // source is already a decent-quality 96kbps CBR MP3.)
+    const inputMp3 = await synthSpeechMp3(speech, safeVoice).catch(err => {
+      console.error('msedge-tts error:', err?.message || err)
+      return null
+    })
+
+    if (!inputMp3 || inputMp3.length < 1000) {
+      return res.status(500).json({ error: 'TTS 合成失败：未收到音频数据。请检查网络或稍后重试。' })
     }
 
-    // Stage 1: Python worker emits raw s16le PCM @ 24kHz mono on stdout.
-    // Why PCM (not MP3) across the subprocess boundary:
-    //   - gTTS internally produces one MP3 per punctuation chunk. If we
-    //     concatenated those MP3s at the byte level we'd get -20 to -40dB
-    //     bleed at every stitch point (the "crackle between phrases").
-    //     The worker now decodes each chunk to PCM and splices in PCM,
-    //     eliminating stitch seams at the source.
-    //   - Edge-TTS emits a 48 kbps CBR MP3. Re-encoding MP3->MP3 (tandem
-    //     coding) compounds compression artifacts. Going MP3->PCM once
-    //     in the worker + PCM->MP3 once here is cleaner.
-    const pcm = await new Promise((resolve, reject) => {
-      const scriptPath = path.join(__dirname, 'tts_worker.py')
-      const py = spawn('python3', [scriptPath, safeVoice], {
-        stdio: ['pipe', 'pipe', 'pipe']
-      })
-      const chunks = []
-      let pyStderr = ''
-      py.stdout.on('data', d => chunks.push(d))
-      py.stderr.on('data', d => { pyStderr += d.toString().slice(0, 500) })
-      py.on('error', reject)
-      py.on('close', code => {
-        if (code !== 0) return reject(new Error(`tts worker exited ${code}: ${pyStderr.trim()}`))
-        resolve(Buffer.concat(chunks))
-      })
-      py.stdin.write(speech)
-      py.stdin.end()
-    }).catch(err => { console.error('tts worker error:', err.message); return null })
-
-    if (!pcm || pcm.length < 1000) {
-      return res.status(500).json({ error: 'tts worker produced no audio' })
-    }
-
-    // Stage 2: PCM -> clean MP3. Filter chain:
-    //   - highpass@80 / lowpass@9000: voice band. Removes sub-bass rumble
-    //     and ultrasonic hiss without touching speech intelligibility.
-    //   - silenceremove (pacing): gTTS outputs one segment per punctuation
-    //     mark with ~0.3-0.7s of trailing silence per segment. Played back
-    //     end-to-end these stack into the "choppy / disconnected" feel the
-    //     user reported. We trim only silences LONGER than 0.5s down to
-    //     0.25s, and we use a conservative -40 dB threshold so we never
-    //     clip real speech (which peaks at -10 to -20 dB). No agate — any
-    //     gate aggressive enough to kill residual noise also kills quiet
-    //     word tails (the "截字" problem).
-    //   - loudnorm: broadcast-standard loudness (-16 LUFS integrated,
-    //     -1.5 dBTP peak). Gives consistent volume across sessions.
+    // Stage 2: PCM -> clean MP3. Filter chain (MINIMAL for Neural voices):
+    //   - highpass@80: kill sub-bass rumble. NOTE: we deliberately DO NOT
+    //     lowpass — Neural voices carry ~12kHz of natural sibilance that
+    //     makes them sound human. Cutting at 9kHz (old gTTS setting) made
+    //     them sound muffled/tinny like old telephone audio.
+    //   - silenceremove (leading only): trim any dead-air at the very
+    //     start. Unlike gTTS, edge-tts has natural prosody with correct
+    //     punctuation timing — we do NOT touch mid-stream pauses, because
+    //     doing so breaks the natural breathing/cadence that makes Neural
+    //     voices sound human. (The old aggressive silenceremove was
+    //     compensating for a gTTS-specific concatenation artifact.)
+    //   - loudnorm: broadcast-standard loudness (-16 LUFS, -1.5 dBTP).
     //   - libmp3lame CBR 128 kbps / 44.1 kHz: high enough bitrate that
     //     the final file has no audible compression artifacts.
     const finalMp3 = await new Promise((resolve, reject) => {
-      const ff = spawn('ffmpeg', [
+      const ff = spawn(FFMPEG_BIN, [
         '-hide_banner', '-loglevel', 'error',
-        // Input: raw PCM s16le 24kHz mono (matches tts_worker.py output)
-        '-f', 's16le', '-ar', '24000', '-ac', '1',
+        // Input: MP3 from msedge-tts (auto-detected format)
         '-i', 'pipe:0',
         '-af', [
           'highpass=f=80',
-          'lowpass=f=9000',
-          // Trim leading dead air entirely
           'silenceremove=start_periods=1:start_duration=0.1:start_threshold=-40dB',
-          // Trim mid-stream silences > 0.5s down to 0.25s (preserves natural
-          // punctuation pacing while removing gTTS segment-boundary bloat)
-          'silenceremove=stop_periods=-1:stop_duration=0.5:stop_threshold=-40dB:stop_silence=0.25',
           'loudnorm=I=-16:TP=-1.5:LRA=11'
         ].join(','),
-        '-c:a', 'libmp3lame', '-b:a', '128k', '-ar', '44100', '-ac', '1',
+        '-c:a', 'libmp3lame', '-b:a', '160k', '-ar', '44100', '-ac', '1',
         '-f', 'mp3', 'pipe:1'
       ], { stdio: ['pipe', 'pipe', 'pipe'] })
       const out = []
@@ -412,7 +479,7 @@ app.post('/api/tts', async (req, res) => {
         resolve(buf)
       })
       ff.stdin.on('error', () => {})
-      ff.stdin.end(pcm)
+      ff.stdin.end(inputMp3)
     }).catch(err => { console.error('ffmpeg encode error:', err.message); return null })
 
     if (!finalMp3) {
@@ -452,6 +519,14 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
-app.listen(PORT, () => {
-  console.log(`DnD DM Server running on port ${PORT}`)
+// When PORT=0 (Electron mode) the OS picks a free port. We print the actual
+// bound port on a line the Electron main process can parse so it knows
+// where to point its BrowserWindow.
+const server = app.listen(PORT, '127.0.0.1', () => {
+  const actual = server.address().port
+  console.log(`DnD DM Server running on port ${actual}`)
+  console.log(`  AI base URL: ${AI_BASE_URL}`)
+  console.log(`  API key:     ${AI_API_KEY ? `configured (${AI_API_KEY.slice(0, 8)}…)` : 'MISSING — see /api/config/status'}`)
+  // Machine-parseable marker for Electron main.js
+  console.log(`LISTENING_ON_PORT=${actual}`)
 })

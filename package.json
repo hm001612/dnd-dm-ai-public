@@ -1,22 +1,81 @@
 {
   "name": "dnd-dm-ai",
   "version": "1.0.0",
+  "description": "AI-powered D&D Dungeon Master desktop app (local multiplayer 1-6 players)",
+  "author": "hm001612",
+  "license": "MIT",
   "type": "module",
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "concurrently \"node server.js\" \"vite --port 5173\"",
     "build": "vite build",
-    "start": "node server.js"
+    "start": "node server.js",
+    "electron": "electron .",
+    "electron:dev": "NODE_ENV=development electron .",
+    "dist": "npm run build && electron-builder",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist:win": "npm run build && electron-builder --win"
+  },
+  "build": {
+    "appId": "ai.dndm.desktop",
+    "productName": "D&D AI DM",
+    "asar": false,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "electron/**/*",
+      "server.js",
+      "dist/**/*",
+      "src/data/**/*",
+      "package.json",
+      "node_modules/**/*",
+      "!node_modules/*/{CHANGELOG.md,README.md,readme.md,*.ts,*.map}",
+      "!node_modules/**/test/**",
+      "!node_modules/**/tests/**",
+      "!node_modules/**/__tests__/**",
+      "!**/.git/**"
+    ],
+    "extraResources": [],
+    "mac": {
+      "category": "public.app-category.games",
+      "target": [
+        { "target": "dmg", "arch": ["x64", "arm64"] }
+      ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] }
+      ],
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "category": "Game"
+    }
   },
   "dependencies": {
     "axios": "^1.6.0",
     "concurrently": "^8.2.0",
     "cors": "^2.8.5",
+    "electron-store": "^11.0.2",
     "express": "^4.18.2",
+    "ffmpeg-static": "^5.3.0",
+    "msedge-tts": "^2.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.7.0",
+    "electron": "^42.0.1",
+    "electron-builder": "^26.8.1",
     "vite": "^5.4.21"
   }
 }

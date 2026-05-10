@@ -1,0 +1,100 @@
+name: Build desktop release
+
+# Build macOS (x64 + arm64) and Windows (x64) installers on git tag push,
+# then attach the artifacts to a GitHub Release.
+#
+# Trigger with:
+#   git tag v0.1.0 && git push origin v0.1.0
+#
+# Requires no extra secrets for unsigned builds. For signed/notarized macOS
+# builds add APPLE_ID / APPLE_APP_SPECIFIC_PASSWORD / CSC_LINK / CSC_KEY_PASSWORD
+# secrets and uncomment the notarize block below.
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-14      # Apple Silicon runner, builds both x64 + arm64 dmgs
+            name: macos
+          - os: windows-latest
+            name: windows
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Package (macOS)
+        if: matrix.name == 'macos'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # CSC_LINK: ${{ secrets.CSC_LINK }}              # enable for signing
+          # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          # APPLE_ID: ${{ secrets.APPLE_ID }}
+          # APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+        run: npx electron-builder --mac --x64 --arm64 --publish never
+
+      - name: Package (Windows)
+        if: matrix.name == 'windows'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx electron-builder --win --x64 --publish never
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dnd-dm-${{ matrix.name }}
+          path: |
+            release/*.dmg
+            release/*.exe
+            release/*.blockmap
+            release/latest*.yml
+          if-no-files-found: ignore
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/**/*.dmg
+            artifacts/**/*.exe
+            artifacts/**/*.blockmap
+            artifacts/**/latest*.yml
+          draft: false
+          prerelease: false
+          generate_release_notes: true
