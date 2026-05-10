@@ -16,8 +16,8 @@ services:
       # 直接从宿主机 shell / .env 文件读取
       - AI_API_KEY=${AI_API_KEY}
       - AI_BASE_URL=${AI_BASE_URL:-https://openrouter.ai/api/v1}
-      - AI_CHAT_MODELS=${AI_CHAT_MODELS:-anthropic/claude-3.5-sonnet,google/gemini-2.0-flash-001,openai/gpt-4o-mini}
-      - AI_MODULE_MODELS=${AI_MODULE_MODELS:-google/gemini-2.0-flash-001,anthropic/claude-3.5-sonnet}
+      - AI_CHAT_MODELS=${AI_CHAT_MODELS:-deepseek/deepseek-v4-flash,deepseek/deepseek-v4-pro,anthropic/claude-3.5-sonnet,google/gemini-2.0-flash-001,openai/gpt-4o-mini}
+      - AI_MODULE_MODELS=${AI_MODULE_MODELS:-deepseek/deepseek-v4-pro,google/gemini-2.0-flash-001,anthropic/claude-3.5-sonnet}
       - PORT=3000
       - NODE_ENV=production
     volumes:

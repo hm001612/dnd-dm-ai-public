@@ -23,8 +23,8 @@ async function initStore() {
     defaults: {
       apiKey: '',
       baseUrl: 'https://openrouter.ai/api/v1',
-      chatModels: 'anthropic/claude-3.5-sonnet,google/gemini-2.0-flash-001,openai/gpt-4o-mini',
-      moduleModels: 'google/gemini-2.0-flash-001,anthropic/claude-3.5-sonnet',
+      chatModels: 'deepseek/deepseek-v4-flash,deepseek/deepseek-v4-pro,anthropic/claude-3.5-sonnet,google/gemini-2.0-flash-001,openai/gpt-4o-mini',
+      moduleModels: 'deepseek/deepseek-v4-pro,google/gemini-2.0-flash-001,anthropic/claude-3.5-sonnet',
       defaultVoice: 'zh-CN-XiaoxiaoNeural'
     }
   })

@@ -65,7 +65,12 @@ const AI_BASE_URL = process.env.AI_BASE_URL || 'https://openrouter.ai/api/v1'
 
 // Fallback chain for /api/chat. Comma-separated env override.
 // Defaults are OpenRouter model IDs known to support long-context Chinese.
+// Ordered cheapest→priciest among comparable quality tiers so the dropdown
+// gives players a natural cost gradient.
 const CHAT_MODELS = (process.env.AI_CHAT_MODELS || [
+  'deepseek/deepseek-v4-flash',       // cheapest, 1M ctx, strong Chinese narrative
+  'deepseek/deepseek-v4-pro',         // more capable DeepSeek, 1M ctx
+  'deepseek/deepseek-v3.2',           // stable V3 line
   'anthropic/claude-3.5-sonnet',
   'google/gemini-2.0-flash-001',
   'openai/gpt-4o-mini',
@@ -75,8 +80,10 @@ const CHAT_MODELS = (process.env.AI_CHAT_MODELS || [
 // Fallback chain for /api/parse-module and /api/generate-module.
 // These need 3k-8k token outputs so we prefer larger-context models first.
 const MODULE_MODELS = (process.env.AI_MODULE_MODELS || [
+  'deepseek/deepseek-v4-pro',         // 1M ctx + strong structured JSON
   'google/gemini-2.0-flash-001',
   'anthropic/claude-3.5-sonnet',
+  'deepseek/deepseek-v4-flash',
   'anthropic/claude-3-haiku'
 ].join(',')).split(',').map(s => s.trim()).filter(Boolean)
 
