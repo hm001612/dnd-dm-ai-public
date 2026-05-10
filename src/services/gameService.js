@@ -97,6 +97,7 @@ function formatMod(score) {
 
 export async function sendMessage(messages, characterOrParty, module, opts = {}) {
   const systemPrompt = buildSystemPrompt(characterOrParty, module, opts)
+  const { model } = opts
   // Client-side 120s timeout. Server's worst case is 4 models × 90s,
   // but the Cloudflare edge drops idle HTTP/2 connections near 100s, so a
   // 120s client cap gives a clean error message before the proxy cuts in.
@@ -107,7 +108,7 @@ export async function sendMessage(messages, characterOrParty, module, opts = {})
     response = await fetch(`${API_BASE}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages, systemPrompt }),
+      body: JSON.stringify({ messages, systemPrompt, ...(model ? { model } : {}) }),
       signal: controller.signal
     })
   } catch (netErr) {
@@ -137,6 +138,14 @@ export async function sendMessage(messages, characterOrParty, module, opts = {})
     throw new Error('DM服务返回了无法识别的响应')
   }
   return parsed.content
+}
+
+// Fetch server config including the list of AI models the user can pick from.
+// Returns {configured, provider, baseUrl, chatModels, moduleModels}.
+export async function fetchConfigStatus() {
+  const res = await fetch(`${API_BASE}/config/status`)
+  if (!res.ok) throw new Error(`config/status HTTP ${res.status}`)
+  return await res.json()
 }
 
 export async function generateModule(params) {

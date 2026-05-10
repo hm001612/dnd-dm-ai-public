@@ -1,5 +1,5 @@
-import { useState, useRef, useMemo, useCallback } from 'react'
-import { sendMessage, fetchTTS } from '../services/gameService.js'
+import { useState, useRef, useMemo, useCallback, useEffect } from 'react'
+import { sendMessage, fetchTTS, fetchConfigStatus } from '../services/gameService.js'
 import { CHARACTER_CLASSES, getModifier } from '../data/characterClasses.js'
 import NarrativePanel from './NarrativePanel.jsx'
 import CharacterSheet from './CharacterSheet.jsx'
@@ -30,7 +30,39 @@ export default function GameScreen({ party: initialParty, module, onEndGame }) {
   const [voiceListening, setVoiceListening] = useState(false)
   const [gameStarted, setGameStarted] = useState(false)
   const [ttsVoice, setTtsVoice] = useState('zh-CN-XiaoxiaoNeural')
+  // Chat model selection. `availableModels` is loaded from the server on
+  // mount; `selectedModel` is persisted to localStorage so the user's pick
+  // survives reloads. `null` means "use server's default fallback chain".
+  const [availableModels, setAvailableModels] = useState([])
+  const [selectedModel, setSelectedModel] = useState(() => {
+    try { return localStorage.getItem('dnd-dm-selected-model') || '' } catch { return '' }
+  })
   const recognitionRef = useRef(null)
+
+  useEffect(() => {
+    fetchConfigStatus()
+      .then(cfg => {
+        const models = Array.isArray(cfg.chatModels) ? cfg.chatModels : []
+        setAvailableModels(models)
+        // If the persisted pick is no longer available (e.g. env changed),
+        // fall back to the server default.
+        if (selectedModel && !models.includes(selectedModel)) {
+          setSelectedModel('')
+          try { localStorage.removeItem('dnd-dm-selected-model') } catch {}
+        }
+      })
+      .catch(err => console.warn('fetchConfigStatus failed:', err))
+    // Intentionally empty deps — load once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  function handleModelChange(model) {
+    setSelectedModel(model)
+    try {
+      if (model) localStorage.setItem('dnd-dm-selected-model', model)
+      else localStorage.removeItem('dnd-dm-selected-model')
+    } catch {}
+  }
 
   const activeChar = useMemo(
     () => party.find(c => c.id === activeCharId) || party[0],
@@ -75,7 +107,8 @@ export default function GameScreen({ party: initialParty, module, onEndGame }) {
     try {
       response = await sendMessage(newHistory, party, module, {
         activeCharacterId: activeChar.id,
-        combat: combat.active ? { active: true, order: combat.order } : null
+        combat: combat.active ? { active: true, order: combat.order } : null,
+        model: selectedModel || undefined
       })
     } catch (e) {
       console.error('sendMessage failed:', e)
@@ -194,6 +227,13 @@ export default function GameScreen({ party: initialParty, module, onEndGame }) {
           </>
         )}
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
+          {availableModels.length > 0 && (
+            <ModelSelector
+              models={availableModels}
+              value={selectedModel}
+              onChange={handleModelChange}
+            />
+          )}
           {voiceListening && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '3px 10px', background: 'rgba(196,53,53,0.15)', borderRadius: 12, border: '1px solid rgba(196,53,53,0.4)' }}>
               <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--red-light)', animation: 'pulse 1s infinite' }} />
@@ -342,6 +382,44 @@ function PartyTurnBar({ party, activeCharId, combat, onSelect, onToggleCombat })
         {combat.active ? '🛡️ 结束战斗' : '⚔️ 进入战斗'}
       </button>
     </div>
+  )
+}
+
+// Compact chat-model selector rendered in the top bar. Empty value means
+// "let the server walk the fallback chain (default)"; selecting a specific
+// model pins that model for subsequent /api/chat calls.
+function ModelSelector({ models, value, onChange }) {
+  // Show just the short form (after the last slash) in the dropdown so the
+  // bar stays tidy. The full "provider/model" id is still in the option value
+  // and the native tooltip.
+  const shortName = (m) => m.split('/').slice(-1)[0]
+  return (
+    <label
+      title={value ? `当前模型：${value}` : '使用服务器默认的模型回退链'}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 6,
+        padding: '2px 6px 2px 10px', borderRadius: 12,
+        border: '1px solid var(--border)', background: 'var(--bg-card)',
+        fontSize: '0.72rem', color: 'var(--text-dim)',
+        fontFamily: 'Cinzel,serif'
+      }}
+    >
+      <span style={{ color: 'var(--gold-dim)' }}>🤖</span>
+      <select
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        style={{
+          background: 'transparent', color: 'var(--text-primary)',
+          border: 'none', outline: 'none', cursor: 'pointer',
+          fontSize: '0.74rem', fontFamily: 'inherit', padding: '2px 0'
+        }}
+      >
+        <option value="">默认（自动回退）</option>
+        {models.map(m => (
+          <option key={m} value={m} title={m}>{shortName(m)}</option>
+        ))}
+      </select>
+    </label>
   )
 }
 

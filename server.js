@@ -110,9 +110,15 @@ function requireApiKey(res) {
 // AI chat endpoint - DM responses
 app.post('/api/chat', async (req, res) => {
   if (!requireApiKey(res)) return
-  const { messages, systemPrompt } = req.body
+  const { messages, systemPrompt, model: requestedModel } = req.body
+  // If the client picked a specific model, try only that one (no silent
+  // fallback — the user explicitly chose it, so a failure should be visible).
+  // Otherwise walk the fallback chain as before.
+  const modelsToTry = requestedModel
+    ? [String(requestedModel)]
+    : CHAT_MODELS
   let lastErr = null
-  for (const model of CHAT_MODELS) {
+  for (const model of modelsToTry) {
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), 90000)
     try {
