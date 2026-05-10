@@ -1,6 +1,6 @@
 {
   "name": "dnd-dm-ai",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "AI-powered D&D Dungeon Master desktop app (local multiplayer 1-6 players)",
   "author": "hm001612",
   "license": "MIT",
