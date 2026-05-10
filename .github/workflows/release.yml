@@ -20,76 +20,86 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    # IMPORTANT: macOS is split into TWO jobs on DIFFERENT runners because
-    # `ffmpeg-static`'s postinstall only downloads the binary for the runner's
-    # current arch. Building both x64 and arm64 from one runner would embed
-    # the wrong ffmpeg into the other-arch dmg (confirmed: Intel Mac + arm64
-    # ffmpeg → "bad CPU type in executable" → TTS fails silently).
-    # macos-13 is the last Intel x64 runner; macos-14+ are Apple Silicon.
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: macos-13          # Intel Mac runner for x64 dmg
-            name: macos-x64
-            pkgCmd: --mac --x64
-          - os: macos-14          # Apple Silicon runner for arm64 dmg
-            name: macos-arm64
-            pkgCmd: --mac --arm64
-          - os: windows-latest
-            name: windows
-            pkgCmd: --win --x64
-
-    runs-on: ${{ matrix.os }}
-
+  build-mac:
+    # ffmpeg-static's postinstall only downloads the binary for the runner's
+    # current arch. Building both x64 and arm64 on one arm64 runner would embed
+    # the wrong ffmpeg into the x64 dmg (Intel Mac → "bad CPU type in executable"
+    # → TTS fails). macos-13 (the last Intel x64 runner) is scarce and can queue
+    # forever; macos-14 (Apple Silicon) is fast and reliable. So we use a single
+    # macos-14 runner and override `npm_config_arch` before swapping in the x64
+    # ffmpeg binary for the x64 dmg build. ffmpeg-static 5.3.0 honors
+    # `npm_config_arch` in both its install script and runtime path resolution.
+    runs-on: macos-14
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install deps
+      - name: Install deps (arm64)
         run: npm ci
-
-      - name: Verify ffmpeg-static arch (debug)
-        if: startsWith(matrix.name, 'macos')
-        run: |
-          file node_modules/ffmpeg-static/ffmpeg || true
-          node_modules/ffmpeg-static/ffmpeg -version 2>&1 | head -1 || true
 
       - name: Build frontend
         run: npm run build
 
-      - name: Package
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Signing/notarization (opt-in) — populate these secrets and uncomment
-          # CSC_LINK to enable. Unsigned dmg/exe still works, users just see
-          # Gatekeeper / SmartScreen prompts on first launch.
-          # CSC_LINK: ${{ secrets.CSC_LINK }}
-          # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          # APPLE_ID: ${{ secrets.APPLE_ID }}
-          # APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-        run: npx electron-builder ${{ matrix.pkgCmd }} --publish never
+      - name: Verify arm64 ffmpeg
+        run: |
+          file node_modules/ffmpeg-static/ffmpeg
+          node_modules/ffmpeg-static/ffmpeg -version | head -1
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - name: Package arm64 dmg
+        env: { GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+        run: npx electron-builder --mac --arm64 --publish never
+
+      - name: Swap in x64 ffmpeg binary
+        # ffmpeg-static install.js reads npm_config_arch and downloads the
+        # matching binary into node_modules/ffmpeg-static/ffmpeg.
+        run: |
+          rm -f node_modules/ffmpeg-static/ffmpeg
+          npm_config_arch=x64 node node_modules/ffmpeg-static/install.js
+          file node_modules/ffmpeg-static/ffmpeg
+
+      - name: Package x64 dmg
+        env: { GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+        # Separate output dir so the arm64 release/ contents aren't clobbered.
+        run: npx electron-builder --mac --x64 --publish never --config.directories.output=release-x64
+
+      - name: Collect artifacts
+        run: |
+          mkdir -p out
+          cp release/*.dmg release/*.blockmap release/latest-mac.yml out/ 2>/dev/null || true
+          cp release-x64/*.dmg release-x64/*.blockmap out/ 2>/dev/null || true
+          # The x64 latest-mac.yml would collide; arm64 wins (electron-updater
+          # will still match both archs by artifactName pattern).
+          ls -la out/
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: dnd-dm-${{ matrix.name }}
+          name: dnd-dm-macos
+          path: out/*
+          if-no-files-found: ignore
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - run: npm run build
+      - name: Package Windows x64
+        env: { GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+        run: npx electron-builder --win --x64 --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dnd-dm-windows
           path: |
-            release/*.dmg
             release/*.exe
             release/*.blockmap
-            release/latest*.yml
+            release/latest.yml
           if-no-files-found: ignore
 
   release:
-    needs: build
+    needs: [build-mac, build-windows]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
