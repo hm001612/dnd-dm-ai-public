@@ -21,14 +21,25 @@ permissions:
 
 jobs:
   build:
+    # IMPORTANT: macOS is split into TWO jobs on DIFFERENT runners because
+    # `ffmpeg-static`'s postinstall only downloads the binary for the runner's
+    # current arch. Building both x64 and arm64 from one runner would embed
+    # the wrong ffmpeg into the other-arch dmg (confirmed: Intel Mac + arm64
+    # ffmpeg → "bad CPU type in executable" → TTS fails silently).
+    # macos-13 is the last Intel x64 runner; macos-14+ are Apple Silicon.
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: macos-14      # Apple Silicon runner, builds both x64 + arm64 dmgs
-            name: macos
+          - os: macos-13          # Intel Mac runner for x64 dmg
+            name: macos-x64
+            pkgCmd: --mac --x64
+          - os: macos-14          # Apple Silicon runner for arm64 dmg
+            name: macos-arm64
+            pkgCmd: --mac --arm64
           - os: windows-latest
             name: windows
+            pkgCmd: --win --x64
 
     runs-on: ${{ matrix.os }}
 
@@ -45,24 +56,26 @@ jobs:
       - name: Install deps
         run: npm ci
 
+      - name: Verify ffmpeg-static arch (debug)
+        if: startsWith(matrix.name, 'macos')
+        run: |
+          file node_modules/ffmpeg-static/ffmpeg || true
+          node_modules/ffmpeg-static/ffmpeg -version 2>&1 | head -1 || true
+
       - name: Build frontend
         run: npm run build
 
-      - name: Package (macOS)
-        if: matrix.name == 'macos'
+      - name: Package
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # CSC_LINK: ${{ secrets.CSC_LINK }}              # enable for signing
+          # Signing/notarization (opt-in) — populate these secrets and uncomment
+          # CSC_LINK to enable. Unsigned dmg/exe still works, users just see
+          # Gatekeeper / SmartScreen prompts on first launch.
+          # CSC_LINK: ${{ secrets.CSC_LINK }}
           # CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
           # APPLE_ID: ${{ secrets.APPLE_ID }}
           # APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-        run: npx electron-builder --mac --x64 --arm64 --publish never
-
-      - name: Package (Windows)
-        if: matrix.name == 'windows'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx electron-builder --win --x64 --publish never
+        run: npx electron-builder ${{ matrix.pkgCmd }} --publish never
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
