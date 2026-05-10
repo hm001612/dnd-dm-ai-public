@@ -14,7 +14,32 @@ const { spawn } = require('child_process')
 const path = require('path')
 const fs = require('fs')
 
+// Known default chat-model strings shipped in prior releases. When we detect
+// one of these in the user's store we treat it as "not customized" — the user
+// never explicitly picked this value, it was auto-written by the first-run
+// defaults. Clearing it lets server.js's built-in defaults take over, so when
+// we ship a new default model list every upgrade picks it up automatically.
+const KNOWN_OLD_CHAT_DEFAULTS = new Set([
+  // v0.1.0
+  'anthropic/claude-3.5-sonnet,google/gemini-2.0-flash-001,openai/gpt-4o-mini',
+  // v0.1.1 (had DeepSeek but minor ordering — still considered "auto default")
+  'deepseek/deepseek-v4-flash,deepseek/deepseek-v4-pro,anthropic/claude-3.5-sonnet,google/gemini-2.0-flash-001,openai/gpt-4o-mini'
+])
+const KNOWN_OLD_MODULE_DEFAULTS = new Set([
+  // v0.1.0
+  'google/gemini-2.0-flash-001,anthropic/claude-3.5-sonnet',
+  // v0.1.1
+  'deepseek/deepseek-v4-pro,google/gemini-2.0-flash-001,anthropic/claude-3.5-sonnet'
+])
+
 // electron-store is ESM-only in v10+; load it dynamically.
+//
+// IMPORTANT: only the keys the user actually customizes (apiKey, baseUrl,
+// defaultVoice) have defaults here. chatModels/moduleModels are intentionally
+// NOT defaulted — leaving them unset means spawnServer() won't pass an env
+// override, so server.js uses its own code-level defaults (which we update
+// every release). This avoids the v0.1.0→v0.1.1 issue where the store's
+// initial default was burned in forever, hiding new models from upgraders.
 let store
 async function initStore() {
   const { default: Store } = await import('electron-store')
@@ -23,11 +48,22 @@ async function initStore() {
     defaults: {
       apiKey: '',
       baseUrl: 'https://openrouter.ai/api/v1',
-      chatModels: 'deepseek/deepseek-v4-flash,deepseek/deepseek-v4-pro,anthropic/claude-3.5-sonnet,google/gemini-2.0-flash-001,openai/gpt-4o-mini',
-      moduleModels: 'deepseek/deepseek-v4-pro,google/gemini-2.0-flash-001,anthropic/claude-3.5-sonnet',
       defaultVoice: 'zh-CN-XiaoxiaoNeural'
     }
   })
+
+  // One-time migration: if the user has an obsolete auto-populated default
+  // string from a previous release, clear it so server.js's new defaults win.
+  const existingChat = store.get('chatModels')
+  if (existingChat && KNOWN_OLD_CHAT_DEFAULTS.has(existingChat)) {
+    console.log('[migrate] clearing obsolete chatModels default from store')
+    store.delete('chatModels')
+  }
+  const existingModule = store.get('moduleModels')
+  if (existingModule && KNOWN_OLD_MODULE_DEFAULTS.has(existingModule)) {
+    console.log('[migrate] clearing obsolete moduleModels default from store')
+    store.delete('moduleModels')
+  }
 }
 
 // Resolve the path to server.js in both dev and packaged modes. In dev the
@@ -63,16 +99,19 @@ function spawnServer() {
     }
 
     // Pass user config to the child via env. server.js reads these.
+    // Only set AI_CHAT_MODELS / AI_MODULE_MODELS when the user has actually
+    // customized them — otherwise leave unset so server.js's code-level
+    // defaults apply (these get the latest models on every release).
     const cfg = store.store
     const env = {
       ...process.env,
       PORT: '0',                          // let OS pick a free port
       NODE_ENV: 'production',             // serve built frontend from dist/
       AI_API_KEY: cfg.apiKey || '',
-      AI_BASE_URL: cfg.baseUrl || 'https://openrouter.ai/api/v1',
-      AI_CHAT_MODELS: cfg.chatModels,
-      AI_MODULE_MODELS: cfg.moduleModels
+      AI_BASE_URL: cfg.baseUrl || 'https://openrouter.ai/api/v1'
     }
+    if (cfg.chatModels) env.AI_CHAT_MODELS = cfg.chatModels
+    if (cfg.moduleModels) env.AI_MODULE_MODELS = cfg.moduleModels
 
     // In packaged builds the child Node runtime is Electron itself invoked
     // with ELECTRON_RUN_AS_NODE=1. In dev we use the system node binary.
